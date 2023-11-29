@@ -1,10 +1,14 @@
-import { StyleSheet, View , Text} from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
+import InputValues from '../../components/InputValues';
 
 export default function TabOneScreen() {
   return (
-    <Text>
-      hello
-     </Text>
+    <View style={styles.container}>
+      <InputValues text='AAAAAA' imagePath='https://www.svgrepo.com/show/592/money.svg'></InputValues>
+      <InputValues text='AAAAAA' imagePath='https://www.svgrepo.com/show/592/money.svg'></InputValues>
+
+  
+    </View>
   );
 }
 
