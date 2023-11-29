@@ -1,13 +1,14 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import InputValues from '../../components/InputValues';
+import SensorOutput from '../../components/SensorOutput';
 
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <InputValues text='AAAAAA' imagePath='https://www.svgrepo.com/show/592/money.svg'></InputValues>
       <InputValues text='AAAAAA' imagePath='https://www.svgrepo.com/show/592/money.svg'></InputValues>
-
+      <SensorOutput/>
   
     </View>
   );
