@@ -7,8 +7,6 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       <InputValues text='AAAAAA' imagePath='https://www.svgrepo.com/show/592/money.svg'></InputValues>
       <InputValues text='AAAAAA' imagePath='https://www.svgrepo.com/show/592/money.svg'></InputValues>
-
-  
     </View>
   );
 }
