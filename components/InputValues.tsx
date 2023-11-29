@@ -5,6 +5,7 @@ interface InputValuesProp{
     text: string,
     imagePath: string
 }
+
 export default function InputValues({text, imagePath}: InputValuesProp) {
   return (
     <View>
