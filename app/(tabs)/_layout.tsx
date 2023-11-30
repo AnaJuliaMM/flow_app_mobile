@@ -46,7 +46,7 @@ export default function TabLayout() {
         options={{
           title: 'Dashboard',
           tabBarIcon:({ color }) => <MaterialIcons name="dashboard" size={24} color="black" />,
-          headerTitle: 'aaa',
+          headerTitle: 'Verifica Combustível',
         }}
       />
     </Tabs>
