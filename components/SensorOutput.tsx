@@ -8,7 +8,7 @@ interface SensorOutputProps{
 
 export default function SensorOutput({value}: SensorOutputProps) {
   return (
-    <View styles={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.text}>O sensor captou:</Text>
       <h1 style={styles.value}>{value}20L</h1>
         <View style={styles.check}>
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
       textAlign:"center",
       margin:5,
       fontSize:80,
+      color:"green"
     },
     check:{
       display:"flex",
