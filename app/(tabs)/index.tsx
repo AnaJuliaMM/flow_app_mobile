@@ -6,8 +6,8 @@ import SensorOutput from '../../components/SensorOutput';
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <InputValues text='AAAAAA' imagePath='https://www.svgrepo.com/show/592/money.svg'></InputValues>
-      <InputValues text='AAAAAA' imagePath='https://www.svgrepo.com/show/592/money.svg'></InputValues>
+      <InputValues text='Quantidade de gasolina que você pagou:' imagePath='../assets/images/vector_money.png' style={{width: 21, height: 38}}></InputValues>
+      <InputValues text='Quantidade de gasolina que apareceu na bomba:' imagePath='../assets/images/vector_oil.png' style={{width: 27, height: 30}}></InputValues>
       <SensorOutput/>
   
     </View>
