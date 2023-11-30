@@ -1,20 +1,21 @@
-import { StyleSheet, Text, View, TextInput  } from 'react-native'
+import { StyleSheet, Text, View, TextInput, ImageStyle  } from 'react-native'
 import React from 'react'
 import CustomImage from './Image'
 
 interface InputValuesProp{
     text: string,
-    imagePath: string
+    imagePath: string,
+    style?: ImageStyle
 }
 
-export default function InputValues({text, imagePath}: InputValuesProp) {
+export default function InputValues({text, imagePath, style}: InputValuesProp) {
   
 
   return (
     <View style={styles.wrapper}>
       <Text style={styles.text}>{text}</Text>
       <View style={styles.container}>
-        <CustomImage imagePath='../assets/images/vector_oil.png' style={{width: 27, height: 30}}/>
+        <CustomImage imagePath={imagePath} style={style}/>
         <TextInput  keyboardType='numeric' style={styles.input}/>
       </View>
     </View>
@@ -26,10 +27,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 5,
+    gap: 10,
   },
   container: {
-      flex: 1,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
@@ -38,7 +38,9 @@ const styles = StyleSheet.create({
   },
   text: {
       color: '#000',
-      fontSize: 30
+      fontSize: 20,
+      textAlign: 'center',
+      width: '70%'
   },
   input: {
     textAlign: 'center',
@@ -49,6 +51,7 @@ const styles = StyleSheet.create({
     borderRadius: 0.5,
     fontSize: 30,
     fontWeight: '700',
+    backgroundColor: '#fff'
   },
   image: {
     width: 17,
