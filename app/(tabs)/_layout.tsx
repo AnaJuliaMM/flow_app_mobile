@@ -44,8 +44,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Verifica Combustível',
+          title: 'Dashboard',
           tabBarIcon:({ color }) => <MaterialIcons name="dashboard" size={24} color="black" />,
+          headerTitle: 'aaa',
         }}
       />
     </Tabs>
