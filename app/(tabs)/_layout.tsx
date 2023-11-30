@@ -24,7 +24,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Verifica Combustível',
+          title: 'Sensor',
           tabBarIcon: ({ color }) =><MaterialIcons name="wifi-tethering" size={24} color="black" />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -44,7 +44,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Dashboard',
+          title: 'Verifica Combustível',
           tabBarIcon:({ color }) => <MaterialIcons name="dashboard" size={24} color="black" />,
         }}
       />
