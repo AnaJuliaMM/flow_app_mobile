@@ -2,6 +2,7 @@ import React from 'react';
 import {Pressable} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs,  } from 'expo-router';
+import { Image } from 'react-native';
 import Colors from '../../constants/Colors';
 
 /**
@@ -23,7 +24,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          title: 'Sensor',
+          const SensorIcon = require('../../assets/customIcon.png'); 
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -43,7 +45,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Tab Two',
+          title: 'Dashboard',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
