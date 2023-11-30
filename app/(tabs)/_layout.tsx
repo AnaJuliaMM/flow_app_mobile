@@ -3,6 +3,7 @@ import {Pressable} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs,  } from 'expo-router';
 import Colors from '../../constants/Colors';
+import { MaterialIcons } from '@expo/vector-icons'; 
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -23,8 +24,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Sensor',
+          tabBarIcon: ({ color }) =><MaterialIcons name="wifi-tethering" size={24} color="black" />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -43,8 +44,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Dashboard',
+          tabBarIcon:({ color }) => <MaterialIcons name="dashboard" size={24} color="black" />,
+          headerTitle: 'Verifica Combustível',
         }}
       />
     </Tabs>
