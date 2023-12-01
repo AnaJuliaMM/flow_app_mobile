@@ -8,7 +8,7 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       <InputValues text='Quantidade de gasolina que você pagou:' imagePath='../assets/images/vector_money.png' style={{width: 21, height: 38}}></InputValues>
       <InputValues text='Quantidade de gasolina que apareceu na bomba:' imagePath='../assets/images/vector_oil.png' style={{width: 27, height: 30}}></InputValues>
-      <SensorOutput/>
+  
   
     </View>
   );
