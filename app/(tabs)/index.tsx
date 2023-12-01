@@ -12,8 +12,8 @@ interface Body {
 export default function TabOneScreen() {
   // JSON data to send in the API
   const [pumpData, setPumpData] = useState({
-    litros_totais: 10.0,
-    preco_por_litro: 5.0,
+    litros_totais: 0.0,
+    preco_por_litro: 0.0
   });
 
   //Function to API response
@@ -45,7 +45,6 @@ export default function TabOneScreen() {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "no-cors",
-        // Add any additional headers here
       },
       body: JSON.stringify(data),
     });
