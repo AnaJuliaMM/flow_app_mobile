@@ -25,20 +25,8 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Sensor',
-          tabBarIcon: ({ color }) =><MaterialIcons name="wifi-tethering" size={24} color="black" />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          tabBarIcon: ({ color }) =><MaterialIcons name="wifi-tethering" size={24} color="black,"/>,
+          headerTitle: 'Verifica Combustível',
         }}
       />
       <Tabs.Screen
