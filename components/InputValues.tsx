@@ -5,10 +5,11 @@ import CustomImage from './Image'
 interface InputValuesProp{
     text: string,
     imagePath: string,
-    style?: ImageStyle
+    style?: ImageStyle,
+    onChange: (value:number) => void
 }
 
-export default function InputValues({text, imagePath, style}: InputValuesProp) {
+export default function InputValues({text, imagePath, style, onChange}: InputValuesProp) {
   
 
   return (
@@ -16,7 +17,7 @@ export default function InputValues({text, imagePath, style}: InputValuesProp) {
       <Text style={styles.text}>{text}</Text>
       <View style={styles.container}>
         <CustomImage imagePath={imagePath} style={style}/>
-        <TextInput  keyboardType='numeric' style={styles.input}/>
+        <TextInput  keyboardType='numeric' style={styles.input} onChange={()=> onChange}/>
       </View>
     </View>
   )
