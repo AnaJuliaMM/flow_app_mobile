@@ -1,15 +1,21 @@
-import { StyleSheet, Text, View, TextInput, ImageStyle  } from 'react-native'
+import { StyleSheet, Text, View, TextInput, ImageStyle, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import React from 'react'
 import CustomImage from './Image'
 
 interface InputValuesProp{
+  
     text: string,
     imagePath: string,
     style?: ImageStyle,
     onChange: (value:number) => void
 }
 
-export default function InputValues({text, imagePath, style, onChange}: InputValuesProp) {
+  const handleDismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
+
+export default function InputValues({text, imagePath, style}: InputValuesProp) {
   
 
   return (
@@ -17,11 +23,17 @@ export default function InputValues({text, imagePath, style, onChange}: InputVal
       <Text style={styles.text}>{text}</Text>
       <View style={styles.container}>
         <CustomImage imagePath={imagePath} style={style}/>
-        <TextInput  
-          keyboardType='numeric' 
-          style={styles.input} 
-          onChangeText={(text) => onChange(Number(text))}/>
-      </View>
+
+          <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
+            <View style={styles.container}>
+              <TextInput
+                keyboardType='numeric'
+                style={styles.input}
+                returnKeyType='done'
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
     </View>
   )
 }
@@ -30,28 +42,32 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    gap: 10,
+    alignItems: 'center'
   },
   container: {
-      flexDirection: 'row',
+      textAlign:"center",
+      flexDirection: 'column',
       justifyContent: 'center',
-      alignItems: 'center',
-      gap: 20,
-      width: '100%'
+      alignSelf: 'center',
   },
   text: {
       color: '#000',
-      fontSize: 20,
+      fontSize: 22,
       textAlign: 'center',
-      width: '70%'
+      display: 'flex',
+      flexDirection:'row',
+      paddingLeft:5,
+      paddingRight: 5,
+      margin:0,
+      paddingBottom:0,
+      paddingTop:0
   },
   input: {
     textAlign: 'center',
     textAlignVertical: 'center',
     border: 'none',
-    width: 100,
-    height: 70,
+    width: 180,
+    height: 100,
     borderRadius: 0.5,
     fontSize: 30,
     fontWeight: '700',
@@ -60,5 +76,6 @@ const styles = StyleSheet.create({
   image: {
     width: 17,
     height: 30
-  }
+  },
+
 })

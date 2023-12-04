@@ -10,7 +10,7 @@ export default function SensorOutput({value}: SensorOutputProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>O sensor captou:</Text>
-      <h1 style={styles.value}>{value}20L</h1>
+      <Text style={styles.value}>{value}20L</Text>
         <View style={styles.check}>
           <Text style={styles.text}> A quantidade abastecida é suficiente!</Text>
           <MaterialIcons name="check" size={34} color="green" />
@@ -21,18 +21,18 @@ export default function SensorOutput({value}: SensorOutputProps) {
 
 const styles = StyleSheet.create({
     container: {
-        fontSize:10,
         justifyContent:"center",
         alignItems:"center",
           },
     text:{
       textAlign:"center",
-      margin:10
+      margin:10,
+      fontSize:18
     },
     value:{
       textAlign:"center",
       margin:5,
-      fontSize:80,
+      fontSize:115,
       color:"green"
     },
     check:{
