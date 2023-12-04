@@ -1,9 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { StyleSheet, View, Text, Alert, Button } from "react-native";
+import { StyleSheet, View, Text, Alert, Button, useColorScheme } from "react-native";
 import InputValues from "../../components/InputValues";
-import SensorOutput from "../../components/SensorOutput";
-
 
 interface Body {
   litros_totais: number;
@@ -80,7 +78,7 @@ interface Body {
         }
       />
 
-      <Button title="Send Data" onPress={() => handleSubmit(pumpData)} />
+      <Button title="Enviar" onPress={() => handleSubmit(pumpData)} />
     </View>
   );
 }
@@ -101,6 +99,6 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
 
-  }
 })
