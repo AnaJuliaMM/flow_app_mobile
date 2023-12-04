@@ -3,26 +3,16 @@ import { useState } from "react";
 import { StyleSheet, View, Text, Alert, Button } from "react-native";
 import InputValues from "../../components/InputValues";
 import SensorOutput from "../../components/SensorOutput";
-import React from "react";
-import { useState } from "react";
-import { StyleSheet, View, Text, Alert, Button } from "react-native";
-import InputValues from "../../components/InputValues";
-import SensorOutput from "../../components/SensorOutput";
+
 
 interface Body {
   litros_totais: number;
   preco_por_litro: number;
 }
 
-export default function TabOneScreen() {
-  // JSON data to send in the API
-  const [pumpData, setPumpData] = useState({
-    litros_totais: 0.0,
-    preco_por_litro: 0.0
-  });
+
 
   //Function to API response
-  async function handleSubmit(data: Body) {
   async function handleSubmit(data: Body) {
     try {
       const response = await postData(data);
@@ -42,18 +32,17 @@ export default function TabOneScreen() {
         Alert.alert("Error", "Failed to send data");
         Alert.alert("Error", "Failed to send data");
       }
-    } catch (error) {
+      } 
+    }catch (error) {
       // Handle network errors or other issues
       console.error("Error:", error);
       console.error("Error:", error);
     }
   }
 
+
   //Funtion to submit the data
   async function postData(data: Body) {
-    // Request
-    return fetch("http://xquad3.pythonanywhere.com/pump/", {
-      method: "POST",
     // Request
     return fetch("http://xquad3.pythonanywhere.com/pump/", {
       method: "POST",
@@ -65,24 +54,15 @@ export default function TabOneScreen() {
     })
   }
 
+  export default function TabOneScreen() {
+    // JSON data to send in the API
+    const [pumpData, setPumpData] = useState({
+      litros_totais: 0.0,
+      preco_por_litro: 0.0
+    });
+
   return (
     <View style={styles.container}>
-      <InputValues
-        text="Quantidade de gasolina que você pagou:"
-        imagePath="../assets/images/vector_money.png"
-        style={{ width: 21, height: 38 }}
-        onChange={(value: number) =>
-          setPumpData({ ...pumpData, preco_por_litro: value })
-        }
-      />
-      <InputValues
-        text="Quantidade de gasolina que apareceu na bomba:"
-        imagePath="../assets/images/vector_oil.png"
-        style={{ width: 27, height: 30 }}
-        onChange={(value: number) =>
-          setPumpData({ ...pumpData, litros_totais: value })
-        }
-      />
       <InputValues
         text="Quantidade de gasolina que você pagou:"
         imagePath="../assets/images/vector_money.png"
@@ -105,23 +85,22 @@ export default function TabOneScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     alignItems: "center",
     justifyContent: "center",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    fontWeight: "bold",
+
   },
   separator: {
     marginVertical: 30,
     height: 1,
     width: "80%",
-    width: "80%",
+
   }
 })
