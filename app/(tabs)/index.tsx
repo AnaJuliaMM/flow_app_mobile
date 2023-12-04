@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { StyleSheet, View, Text, Alert, Button } from "react-native";
 import InputValues from "../../components/InputValues";
-import SensorOutput from "../../components/SensorOutput";
+import ApiService from "../../api/apiServices";
 
 
 interface Body {
@@ -15,44 +15,18 @@ interface Body {
   //Function to API response
   async function handleSubmit(data: Body) {
     try {
-      const response = await postData(data);
-      if (response.ok) {
-      const response = await postData(data);
-      if (response.ok) {
-        //Catch the response json body
-        const responseData = await response.json();
-        // Print the response
-        console.log(responseData);
-        // Generate an alert
-        Alert.alert("Success", "Data sent successfully");
-        // Generate an alert
-        Alert.alert("Success", "Data sent successfully");
-      } else {
-        // Generate an alert with the error
-        Alert.alert("Error", "Failed to send data");
-        Alert.alert("Error", "Failed to send data");
-      }
-      } 
+      await ApiService.post(data);
+      // Generate an alert
+      Alert.alert("Success", "Data sent successfully");
+    
     }catch (error) {
+      // Generate an alert with the error
+      Alert.alert("Error", "Failed to send data");
       // Handle network errors or other issues
-      console.error("Error:", error);
       console.error("Error:", error);
     }
   }
 
-
-  //Funtion to submit the data
-  async function postData(data: Body) {
-    // Request
-    return fetch("http://xquad3.pythonanywhere.com/pump/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "no-cors",
-      },
-      body: JSON.stringify(data),
-    })
-  }
 
   export default function TabOneScreen() {
     // JSON data to send in the API
