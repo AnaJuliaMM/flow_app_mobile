@@ -17,7 +17,10 @@ export default function InputValues({text, imagePath, style, onChange}: InputVal
       <Text style={styles.text}>{text}</Text>
       <View style={styles.container}>
         <CustomImage imagePath={imagePath} style={style}/>
-        <TextInput  keyboardType='numeric' style={styles.input} onChange={()=> onChange}/>
+        <TextInput  
+          keyboardType='numeric' 
+          style={styles.input} 
+          onChangeText={(text) => onChange(Number(text))}/>
       </View>
     </View>
   )
