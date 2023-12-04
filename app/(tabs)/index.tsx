@@ -1,39 +1,32 @@
 import React from "react";
 import { useState } from "react";
-import { StyleSheet, View, Text, Alert, Button, useColorScheme } from "react-native";
+import { StyleSheet, View, Alert, Button } from "react-native";
 import InputValues from "../../components/InputValues";
 import ApiService from "../../api/apiServices";
-
+import { useNavigation } from '@react-navigation/native';
 
 interface Body {
   litros_totais: number;
   preco_por_litro: number;
 }
 
-
-
-  //Function to API response
-  async function handleSubmit(data: Body) {
-    try {
-      await ApiService.post(data);
-      // Generate an alert
-      Alert.alert("Success", "Data sent successfully");
-    
-    }catch (error) {
-      // Generate an alert with the error
-      Alert.alert("Error", "Failed to send data");
-      // Handle network errors or other issues
-      console.error("Error:", error);
-    }
+async function handleSubmit(data: Body, navigation) {
+  try {
+    await ApiService.post(data);
+    Alert.alert("Success", "Data sent successfully");
+    navigation.navigate('dashboard'); // Navigate to the "dashboard" screen
+  } catch (error) {
+    Alert.alert("Error", "Failed to send data");
+    console.error("Error:", error);
   }
+}
 
-
-  export default function TabOneScreen() {
-    // JSON data to send in the API
-    const [pumpData, setPumpData] = useState({
-      litros_totais: 0.0,
-      preco_por_litro: 0.0
-    });
+export default function TabOneScreen() {
+  const navigation = useNavigation();
+  const [pumpData, setPumpData] = useState({
+    litros_totais: 0.0,
+    preco_por_litro: 0.0,
+  });
 
   return (
     <View style={styles.container}>
@@ -54,11 +47,13 @@ interface Body {
         }
       />
 
-      <Button title="Enviar" onPress={() => handleSubmit(pumpData)} />
+      <Button
+        title="Enviar"
+        onPress={() => handleSubmit(pumpData, navigation)}
+      />
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -66,15 +61,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
+});
 
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-
-})
