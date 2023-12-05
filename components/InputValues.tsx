@@ -15,13 +15,15 @@ interface InputValuesProp{
   };
 
 
-export default function InputValues({text}: InputValuesProp) {
+export default function InputValues({text, imagePath, style}: InputValuesProp) {
   
 
   return (
     <View style={styles.wrapper}>
       <Text style={styles.text}>{text}</Text>
       <View style={styles.container}>
+        <CustomImage imagePath={imagePath} style={style}/>
+
           <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
             <View style={styles.container}>
               <TextInput

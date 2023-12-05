@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import React, { useState, useEffect } from "react";
 import { LineChart } from "react-native-chart-kit";
-import { format, parseISO } from "date-fns"; 
 
 interface SensorData {
   tempo_operacao: string;
@@ -85,7 +84,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Dashboard</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
