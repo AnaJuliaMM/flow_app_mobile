@@ -11,6 +11,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.light.tint,
+        tabBarStyle: {
+          backgroundColor: '#212122', // Background da barra inferior
+        },
+        headerStyle: {
+          backgroundColor: '#212122', // Background do cabeçalho
+        },
+        headerTintColor: 'white', // Cor do texto do cabeçalho
       }}
     >
       <Tabs.Screen
@@ -18,9 +25,17 @@ export default function TabLayout() {
         options={{
           title: "Sensor",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="wifi-tethering" size={24} color="black" />
+            <MaterialIcons name="wifi-tethering" size={24} color={color} />
           ),
-          headerTitle: "Verifica Combustível",
+          headerTitle: "Sensor Flow",
+          headerTitleAlign: 'center',
+          headerTitleContainerStyle: {
+            flex: 1,
+            justifyContent: 'center',
+          },
+          headerTitleStyle: {
+            fontSize: 20,
+          },
         }}
       />
       <Tabs.Screen
@@ -28,9 +43,17 @@ export default function TabLayout() {
         options={{
           title: "Resultado",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="dashboard" size={24} color="black" />
+            <MaterialIcons name="dashboard" size={24} color={color} />
           ),
-          headerTitle: "Verifica Combustível",
+          headerTitle: "Sensor Flow",
+          headerTitleAlign: 'center',
+          headerTitleContainerStyle: {
+            flex: 1,
+            justifyContent: 'center',
+          },
+          headerTitleStyle: {
+            fontSize: 20,
+          },
         }}
       />
 
@@ -39,11 +62,20 @@ export default function TabLayout() {
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="dashboard" size={24} color="black" />
+            <MaterialIcons name="assessment" size={24} color={color} /> // Altere o ícone aqui
           ),
-          headerTitle: "Verifica Combustível",
+          headerTitle: "Sensor Flow",
+          headerTitleAlign: 'center',
+          headerTitleContainerStyle: {
+            flex: 1,
+            justifyContent: 'center',
+          },
+          headerTitleStyle: {
+            fontSize: 20,
+          },
         }}
       />
     </Tabs>
   );
 }
+

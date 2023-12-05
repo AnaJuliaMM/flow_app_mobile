@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { StyleSheet, View, Alert, Button } from "react-native";
+import { StyleSheet, View, Alert, Button, Text } from "react-native";
 import InputValues from "../../components/InputValues";
 import ApiService from "../../api/apiServices";
 import { useNavigation } from '@react-navigation/native';
@@ -14,7 +14,7 @@ async function handleSubmit(data: Body, navigation:any) {
   try {
     await ApiService.post(data);
     Alert.alert("Success", "Data sent successfully");
-    navigation.navigate('output'); // Navigate to the "output" screen
+    navigation.navigate('output'); 
   } catch (error) {
     Alert.alert("Error", "Failed to send data");
     console.error("Error:", error);
@@ -31,7 +31,7 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <InputValues
-        text="Quantidade de gasolina que você pagou:"
+        text="Valor Pago:"
         imagePath="../../assets/images/vector_money.png"
         style={{ width: 21, height: 38 }}
         onChange={(value: number) =>
@@ -39,18 +39,22 @@ export default function TabOneScreen() {
         }
       />
       <InputValues
-        text="Quantidade de gasolina que apareceu na bomba:"
-        imagePath="../../assets/images/vector_oil.png"
-        style={{ width: 27, height: 30 }}
+        text="Quantidade na bomba:"
+        imagePath="../../assets/images/vector_money.png"
+        style={{ width: 21, height: 38 }}
         onChange={(value: number) =>
-          setPumpData({ ...pumpData, litros_totais: value })
+          setPumpData({ ...pumpData, preco_por_litro: value })
         }
-      />
+      />  
 
-      <Button
-        title="Enviar"
-        onPress={() => handleSubmit(pumpData, navigation)}
-      />
+      <View style={{ width: 100, height:50}}>
+        <Button 
+          title="Enviar"
+          onPress={() => handleSubmit(pumpData, navigation)}
+          color="#646464"
+          accessibilityLabel="Clique para enviar os dados"
+        />
+      </View>
     </View>
   );
 }
@@ -63,4 +67,3 @@ const styles = StyleSheet.create({
     paddingBottom: 40
   },
 });
-

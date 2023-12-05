@@ -31,6 +31,8 @@ const Dashboard: React.FC = () => {
     legend: ["Vazão por Segundo"],
   });
   const [loading, setLoading] = useState<boolean>(true);
+  const [maxDataPoints, setMaxDataPoints] = useState<number>(7);
+  const [timeInterval, setTimeInterval] = useState<number>(1);
 
   const fetchData = async () => {
     try {
@@ -38,12 +40,14 @@ const Dashboard: React.FC = () => {
       const result: SensorData[] = await response.json();
 
       const formattedData = result.map((data, index) => ({
-        seconds: index + 1, // Index + 1 para começar em 1
+        seconds: index * timeInterval + 1,
         vazao: data.litros_totais,
       }));
 
-      const labels = formattedData.map((entry) => entry.seconds.toString());
-      const vazaoPorSegundo = formattedData.map((entry) => entry.vazao);
+      const reducedData = formattedData.slice(-maxDataPoints);
+
+      const labels = reducedData.map((entry) => entry.seconds.toString());
+      const vazaoPorSegundo = reducedData.map((entry) => entry.vazao);
 
       setChartData({
         labels,
@@ -69,7 +73,7 @@ const Dashboard: React.FC = () => {
 
     const intervalId = setInterval(() => {
       fetchData();
-    }, 1000);
+    }, timeInterval * 1000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -98,6 +102,7 @@ const Dashboard: React.FC = () => {
             strokeWidth: 2,
           }}
           bezier
+          xLabelsOffset={-10}
         />
       )}
     </View>
