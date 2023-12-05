@@ -65,10 +65,9 @@ const styles = StyleSheet.create({
   input: {
     textAlign: 'center',
     textAlignVertical: 'center',
-    border: 'none',
     width: 180,
     height: 100,
-    borderRadius: 0.5,
+    borderRadius: 15,
     fontSize: 30,
     fontWeight: '700',
     backgroundColor: '#fff'
