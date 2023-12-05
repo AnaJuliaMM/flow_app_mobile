@@ -99,6 +99,7 @@ const Dashboard: React.FC = () => {
             color: (opacity) => `rgba(0, 0, 0, ${opacity})`,
             strokeWidth: 2,
           }}
+          bezier
         />
       )}
     </View>
