@@ -14,7 +14,7 @@ async function handleSubmit(data: Body, navigation) {
   try {
     await ApiService.post(data);
     Alert.alert("Success", "Data sent successfully");
-    navigation.navigate('dashboard'); // Navigate to the "dashboard" screen
+    navigation.navigate('output'); // Navigate to the "output" screen
   } catch (error) {
     Alert.alert("Error", "Failed to send data");
     console.error("Error:", error);
