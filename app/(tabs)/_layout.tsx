@@ -1,40 +1,47 @@
-import React from 'react';
-import {Pressable} from 'react-native'
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs,  } from 'expo-router';
-import Colors from '../../constants/Colors';
-import { MaterialIcons } from '@expo/vector-icons'; 
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import React from "react";
+import { Tabs } from "expo-router";
+import Colors from "../../constants/Colors";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function TabLayout() {
+  const navigation = useNavigation();
+
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.light.tint,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Sensor',
-          tabBarIcon: ({ color }) =><MaterialIcons name="wifi-tethering" size={24} color="black,"/>,
-          headerTitle: 'Verifica Combustível',
+          title: "Sensor",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="wifi-tethering" size={24} color="black" />
+          ),
+          headerTitle: "Verifica Combustível",
         }}
       />
       <Tabs.Screen
+        name="output"
+        options={{
+          title: "Resultado",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="dashboard" size={24} color="black" />
+          ),
+          headerTitle: "Verifica Combustível",
+        }}
+      />
+
+      <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Resultado',
-          tabBarIcon:({ color }) => <MaterialIcons name="dashboard" size={24} color="black" />,
-          headerTitle: 'Verifica Combustível',
+          title: "Dashboard",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="dashboard" size={24} color="black" />
+          ),
+          headerTitle: "Verifica Combustível",
         }}
       />
     </Tabs>
