@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import React, { useState, useEffect } from "react";
 import { LineChart } from "react-native-chart-kit";
+import { format, parseISO } from "date-fns"; 
 
 interface SensorData {
   tempo_operacao: string;
@@ -28,7 +29,7 @@ const Dashboard: React.FC = () => {
         strokeWidth: 2,
       },
     ],
-    legend: ["Litros Totais"],
+    legend: ["Vazão por Segundo"],
   });
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -37,19 +38,24 @@ const Dashboard: React.FC = () => {
       const response = await fetch("http://xquad3.pythonanywhere.com/sensor/");
       const result: SensorData[] = await response.json();
 
-      const labels = result.map((data) => data.tempo_operacao);
-      const litrosTotais = result.map((data) => data.litros_totais);
+      const formattedData = result.map((data, index) => ({
+        seconds: index + 1, // Index + 1 para começar em 1
+        vazao: data.litros_totais,
+      }));
+
+      const labels = formattedData.map((entry) => entry.seconds.toString());
+      const vazaoPorSegundo = formattedData.map((entry) => entry.vazao);
 
       setChartData({
         labels,
         datasets: [
           {
-            data: litrosTotais,
+            data: vazaoPorSegundo,
             color: (opacity) => `rgba(134, 65, 244, ${opacity})`,
             strokeWidth: 2,
           },
         ],
-        legend: ["Litros Totais"],
+        legend: ["Vazão por Segundo"],
       });
 
       setLoading(false);
