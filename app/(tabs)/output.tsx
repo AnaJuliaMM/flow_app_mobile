@@ -6,7 +6,7 @@ import InputValues from '../../components/InputValues';
 export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <SensorOutput />
+      <SensorOutput value={23} />
     </View>
   );
 }

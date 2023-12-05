@@ -15,15 +15,13 @@ interface InputValuesProp{
   };
 
 
-export default function InputValues({text, imagePath, style}: InputValuesProp) {
+export default function InputValues({text}: InputValuesProp) {
   
 
   return (
     <View style={styles.wrapper}>
       <Text style={styles.text}>{text}</Text>
       <View style={styles.container}>
-        <CustomImage imagePath={imagePath} style={style}/>
-
           <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
             <View style={styles.container}>
               <TextInput
@@ -65,10 +63,9 @@ const styles = StyleSheet.create({
   input: {
     textAlign: 'center',
     textAlignVertical: 'center',
-    border: 'none',
     width: 180,
     height: 100,
-    borderRadius: 0.5,
+    borderRadius: 15,
     fontSize: 30,
     fontWeight: '700',
     backgroundColor: '#fff'

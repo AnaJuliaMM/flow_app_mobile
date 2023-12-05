@@ -10,7 +10,7 @@ interface Body {
   preco_por_litro: number;
 }
 
-async function handleSubmit(data: Body, navigation) {
+async function handleSubmit(data: Body, navigation:any) {
   try {
     await ApiService.post(data);
     Alert.alert("Success", "Data sent successfully");
@@ -32,7 +32,7 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       <InputValues
         text="Quantidade de gasolina que você pagou:"
-        imagePath="../assets/images/vector_money.png"
+        imagePath="../../assets/images/vector_money.png"
         style={{ width: 21, height: 38 }}
         onChange={(value: number) =>
           setPumpData({ ...pumpData, preco_por_litro: value })
@@ -40,7 +40,7 @@ export default function TabOneScreen() {
       />
       <InputValues
         text="Quantidade de gasolina que apareceu na bomba:"
-        imagePath="../assets/images/vector_oil.png"
+        imagePath="../../assets/images/vector_oil.png"
         style={{ width: 27, height: 30 }}
         onChange={(value: number) =>
           setPumpData({ ...pumpData, litros_totais: value })
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingBottom: 40
   },
 });
 
