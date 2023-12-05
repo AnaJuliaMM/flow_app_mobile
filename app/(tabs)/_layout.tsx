@@ -24,17 +24,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="output"
-        options={{
-          title: "Resultado",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="dashboard" size={24} color="black" />
-          ),
-          headerTitle: "Verifica Combustível",
-        }}
-      />
-
-      <Tabs.Screen
         name="dashboard"
         options={{
           title: "Dashboard",

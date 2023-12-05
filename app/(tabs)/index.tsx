@@ -1,32 +1,41 @@
-import React from "react";
-import { useState } from "react";
-import { StyleSheet, View, Alert, Button } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Alert, Button, Text } from "react-native";
 import InputValues from "../../components/InputValues";
 import ApiService from "../../api/apiServices";
-import { useNavigation } from '@react-navigation/native';
+
 
 interface Body {
   litros_totais: number;
   preco_por_litro: number;
 }
 
-async function handleSubmit(data: Body, navigation:any) {
-  try {
-    await ApiService.post(data);
-    Alert.alert("Success", "Data sent successfully");
-    navigation.navigate('output'); // Navigate to the "output" screen
-  } catch (error) {
-    Alert.alert("Error", "Failed to send data");
-    console.error("Error:", error);
-  }
-}
+
 
 export default function TabOneScreen() {
-  const navigation = useNavigation();
   const [pumpData, setPumpData] = useState({
     litros_totais: 0.0,
     preco_por_litro: 0.0,
   });
+
+
+   
+  async function handleSubmitData(data: Body) {
+    try {
+      await ApiService.post(data);
+      Alert.alert("Success", "Data sent successfully");
+    } catch (error) {
+      Alert.alert("Error", "Failed to send data");
+      console.error("Error:", error);
+    }
+  }
+
+
+
+  
+
+ 
+
+
 
   return (
     <View style={styles.container}>
@@ -49,8 +58,12 @@ export default function TabOneScreen() {
 
       <Button
         title="Enviar"
-        onPress={() => handleSubmit(pumpData, navigation)}
+        onPress={() => handleSubmitData(pumpData)}
       />
+
+   
+
+
     </View>
   );
 }
