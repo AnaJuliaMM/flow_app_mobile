@@ -13,7 +13,16 @@ const handleDismissKeyboard = () => {
   Keyboard.dismiss();
 };
 
-export default function InputValues({ text, imagePath, style }: InputValuesProp) {
+export default function InputValues({ text, imagePath, style, onChange }: InputValuesProp) {
+  const [inputValue, setInputValue] = React.useState<string>('');
+
+  const handleInputChange = (text: string) => {
+    // Você pode adicionar validação aqui para garantir que seja um número válido
+    const numericValue = parseFloat(text);
+    
+    setInputValue(text);
+    onChange(numericValue);
+  };
 
   return (
     <View style={styles.wrapper}>
@@ -27,12 +36,14 @@ export default function InputValues({ text, imagePath, style }: InputValuesProp)
               keyboardType='numeric'
               style={styles.input}
               returnKeyType='done'
+              value={inputValue}
+              onChangeText={handleInputChange}
             />
           </View>
         </TouchableWithoutFeedback>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

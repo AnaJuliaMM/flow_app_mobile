@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { LineChart } from "react-native-chart-kit";
 import SensorOutput from "../../components/SensorOutput";
-
-
+import { format } from 'date-fns';
 
 interface SensorData {
+  id: number;
   tempo_operacao: string;
   litros_totais: number;
+  litros_por_minuto: number;
 }
 
 interface ChartData {
@@ -22,15 +23,11 @@ interface ChartData {
 
 const API_ENDPOINT = 'http://xquad3.pythonanywhere.com/sensor';
 
-
-
 export default function Dashboard() {
-  // Variables of output
   const [litrosTotais, setLitrosTotais] = useState(0);
   const [abastecimentoEmAndamento, setAbastecimentoEmAndamento] = useState(false);
-  const [ultimaAtualizacao, setUltimaAtualizacao] = useState<Date | null>(null);
+  const [ultimaAtualizacao, setUltimaAtualizacao] = useState<Date | undefined>(undefined);
 
-  // Variables of dashboard
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [
@@ -40,103 +37,66 @@ export default function Dashboard() {
         strokeWidth: 2,
       },
     ],
-    legend: ["Vazão por Segundo"],
+    legend: ["Vazão por Minuto"],
   });
+
   const [loading, setLoading] = useState<boolean>(true);
-  const [maxDataPoints, setMaxDataPoints] = useState<number>(7);
+  const [maxDataPoints, setMaxDataPoints] = useState<number>(5);
   const [timeInterval, setTimeInterval] = useState<number>(1);
-
-
-<<<<<<< HEAD
-      const formattedData = result.map((data, index) => ({
-        seconds: index * timeInterval + 1,
-        vazao: data.litros_totais,
-      }));
-
-      const reducedData = formattedData.slice(-maxDataPoints);
-
-      const labels = reducedData.map((entry) => entry.seconds.toString());
-      const vazaoPorSegundo = reducedData.map((entry) => entry.vazao);
-=======
-  
-  
+  const [lastRecordTimestamp, setLastRecordTimestamp] = useState<string | null>(null);
+  const [lastProcessedRecord, setLastProcessedRecord] = useState<SensorData | null>(null);
 
   useEffect(() => {
-    const verificaFimAbastecimento = () => {
-      if (abastecimentoEmAndamento && ultimaAtualizacao) {
-        const diferencaTempo = new Date().getTime() - ultimaAtualizacao.getTime();
->>>>>>> dc75da0644020b4e8bc12498c462d83e51b619cf
-
-        if (diferencaTempo > 5000 && litrosTotais > 0) {
-          setAbastecimentoEmAndamento(false);
-          console.log('Abastecimento concluído! Último valor:', litrosTotais);
-        }
-      }
-    };
-
-    const intervalFimAbastecimento = setInterval(verificaFimAbastecimento, 1000);
-
-    return () => clearInterval(intervalFimAbastecimento);
-  }, [abastecimentoEmAndamento, ultimaAtualizacao, litrosTotais]);
-
-  useEffect(() => {
-    fetchData();
-    const intervalDashboard = setInterval(() => {
-      fetchData();
-    }, timeInterval * 1000);
-
-    fetchDataOutput();
-    const intervalOutput = setInterval(fetchDataOutput, 500);
-
-    return () => {
-      clearInterval(intervalDashboard);
-      clearInterval(intervalOutput);
-    }
-  }, []);
-
-    // Get data to dashboard
     const fetchData = async () => {
       try {
-        const response = await fetch("http://xquad3.pythonanywhere.com/sensor/");
+        const queryParams = lastRecordTimestamp ? `?lastRecordTimestamp=${lastRecordTimestamp}` : '';
+        const response = await fetch(`${API_ENDPOINT}${queryParams}`);
         const result: SensorData[] = await response.json();
-  
-        const formattedData = result.map((data, index) => ({
-          seconds: index * timeInterval + 1,
-          vazao: data.litros_totais,
-        }));
-  
-        const reducedData = formattedData.slice(-maxDataPoints);
-        const labels = reducedData.map((entry) => entry.seconds.toString());
-        const vazaoPorSegundo = reducedData.map((entry) => entry.vazao);
-  
-        setChartData({
-          labels,
-          datasets: [
-            {
-              data: vazaoPorSegundo,
-              color: (opacity) => `rgba(134, 65, 244, ${opacity})`,
-              strokeWidth: 2,
-            },
-          ],
-          legend: ["Vazão por Segundo"],
-        });
-  
-        setLoading(false);
+
+        if (result.length > 0) {
+          const latestRecord = result[result.length - 1];
+          if (!lastProcessedRecord || latestRecord.tempo_operacao !== lastProcessedRecord.tempo_operacao) {
+            setLastRecordTimestamp(latestRecord.tempo_operacao);
+            setLastProcessedRecord(latestRecord);
+
+            const formattedData = result.map((data) => ({
+              seconds: new Date(data.tempo_operacao).getTime(),
+              vazao: data.litros_por_minuto,
+            }));
+
+            const reducedData = formattedData.slice(-maxDataPoints);
+            const labels = reducedData.map((entry) => format(entry.seconds, 'HH:mm:ss'));
+            const vazaoPorMinuto = reducedData.map((entry) => entry.vazao);
+
+            setChartData({
+              labels,
+              datasets: [
+                {
+                  data: vazaoPorMinuto,
+                  color: (opacity) => `rgba(134, 65, 244, ${opacity})`,
+                  strokeWidth: 2,
+                },
+              ],
+              legend: ["Vazão por Minuto"],
+            });
+
+            setLoading(false);
+          }
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
       }
     };
-  
-    // Code to output
+
     const fetchDataOutput = async () => {
       try {
         const response = await fetch(API_ENDPOINT);
         const data = await response.json();
-  
+
         if (Array.isArray(data) && data.length > 0) {
           const ultimoDado = data[data.length - 1].litros_totais;
-  
+
           if (ultimoDado !== litrosTotais) {
             setLitrosTotais(ultimoDado);
             setAbastecimentoEmAndamento(true);
@@ -147,65 +107,61 @@ export default function Dashboard() {
         console.error('Erro ao buscar dados da API:', error);
         setLitrosTotais(0);
         setAbastecimentoEmAndamento(false);
-        setUltimaAtualizacao(null);
+        setUltimaAtualizacao(undefined);
       }
     };
 
+    fetchData();
+    const intervalDashboard = setInterval(fetchData, timeInterval * 1000);
 
-  if (loading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+    fetchDataOutput();
+    const intervalOutput = setInterval(fetchDataOutput, 500);
 
+    return () => {
+      clearInterval(intervalDashboard);
+      clearInterval(intervalOutput);
+    };
+  }, [timeInterval, litrosTotais, lastRecordTimestamp, lastProcessedRecord]);
 
-  //Lógica do abastecimento
-  let textoExibicao = 'Aguardando abastecimento';
-
-  if (abastecimentoEmAndamento) {
-    textoExibicao = 'Abastecimento em andamento';
-  } else if (ultimaAtualizacao) {
-    textoExibicao = 'Abastecimento concluído!';
-  }
-
-
-
-
-
-
-  return (
+   return (
     <View style={styles.container}>
-         <View style={styles.container}>
-          <SensorOutput value={litrosTotais} iconText={'Abastecimento aceitável'} iconColor={ 'green'} />
-          <Text>{textoExibicao}</Text>
-        </View>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <LineChart
-          data={chartData}
-          width={370}
-          height={220}
-          chartConfig={{
-            backgroundGradientFrom: "#ffffff",
-            backgroundGradientTo: "#ffffff",
-            color: (opacity) => `rgba(0, 0, 0, ${opacity})`,
-            strokeWidth: 2,
-          }}
-          bezier
-          xLabelsOffset={-10}
-        />
-      )}
+      <SensorOutput value={litrosTotais} iconText={'Abastecimento aceitável'} iconColor={'green'} />
+
+      <View style={styles.chartContainer}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <LineChart
+            data={chartData}
+            width={370}
+            height={220}
+            chartConfig={{
+              backgroundGradientFrom: "#ffffff",
+              backgroundGradientTo: "#ffffff",
+              color: (opacity) => `rgba(0, 0, 0, ${opacity})`,
+              strokeWidth: 2,
+            }}
+            bezier
+            xLabelsOffset={-10}
+          />
+        )}
+      </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
-    paddingTop: 40,
+    paddingTop: 10,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  chartContainer: {
+    marginTop: 40,
+  },
+  text: {
+    marginTop: 40,
+    textAlign: 'center',
   },
 });
-

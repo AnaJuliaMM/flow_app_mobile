@@ -23,7 +23,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Sensor",
+          title: "Input",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="wifi-tethering" size={24} color={color} />
           ),

@@ -1,33 +1,36 @@
-import React from "react";
-import { StyleSheet, View, Alert, Button } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, Alert, Button, Text } from "react-native";
 import InputValues from "../../components/InputValues";
-import ApiService from "../../api/apiServices";
 
 interface Body {
   litros_totais: number;
   preco_por_litro: number;
 }
 
-async function handleSubmit(data: Body, router: any) {
-  try {
-    await ApiService.post(data);
-    Alert.alert("Success", "Data sent successfully");
-    router.navigate('output'); 
-  } catch (error) {
-    Alert.alert("Error", "Failed to send data");
-    console.error("Error:", error);
-  }
-}
-
 export default function TabOneScreen({ navigation }: any) {
-  const [pumpData, setPumpData] = React.useState({
+  const [pumpData, setPumpData] = useState({
     litros_totais: 0.0,
     preco_por_litro: 0.0,
   });
 
-  const handleSubmitData = async (data: Body) => {
+  const [resultadoProduto, setResultadoProduto] = useState<number | null>(null);
+
+  const handleSubmit = async (data: Body) => {
     try {
-      await ApiService.post(data);
+      // Converte os valores para números
+      const precoPorLitro = parseFloat(data.preco_por_litro.toString());
+      const litrosTotais = parseFloat(data.litros_totais.toString());
+
+      // Debug logs
+      console.log("precoPorLitro:", precoPorLitro);
+      console.log("litrosTotais:", litrosTotais);
+
+      // Calcular o produto e atualizar o estado
+      const produto = precoPorLitro * litrosTotais;
+      console.log("produto:", produto);
+
+      setResultadoProduto(produto);
+
       Alert.alert("Success", "Data sent successfully");
     } catch (error) {
       Alert.alert("Error", "Failed to send data");
@@ -50,18 +53,24 @@ export default function TabOneScreen({ navigation }: any) {
         imagePath="../../assets/images/vector_money.png"
         style={{ width: 21, height: 38 }}
         onChange={(value: number) =>
-          setPumpData({ ...pumpData, preco_por_litro: value })
+          setPumpData({ ...pumpData, litros_totais: value })
         }
-      />  
+      />
 
       <View style={{ width: 100, height: 50 }}>
         <Button 
           title="Enviar"
-          onPress={() => handleSubmit(pumpData, navigation)}
+          onPress={() => handleSubmit(pumpData)}
           color="#646464"
           accessibilityLabel="Clique para enviar os dados"
         />
       </View>
+
+      {resultadoProduto !== null && (
+        <Text style={styles.resultText}>
+          Total: R${resultadoProduto.toFixed(2)}
+        </Text>
+      )}
     </View>
   );
 }
@@ -69,8 +78,17 @@ export default function TabOneScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 40
+    alignItems: "center",
+  },
+  resultText: {
+    marginTop: 20,
+    fontSize: 25,
+    marginBottom:30,
+    color: 'white',
+    fontWeight: 'bold',
+    backgroundColor:'grey',
+    padding:10,
+    borderRadius:15
   },
 });
