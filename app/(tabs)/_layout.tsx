@@ -39,7 +39,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-<<<<<<< HEAD
         name="output"
         options={{
           title: "Resultado",
@@ -59,8 +58,6 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-=======
->>>>>>> dc75da0644020b4e8bc12498c462d83e51b619cf
         name="dashboard"
         options={{
           title: "Dashboard",
