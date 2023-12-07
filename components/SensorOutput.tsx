@@ -3,17 +3,20 @@ import React from 'react';
 
 interface SensorOutputProps {
   value: number;
-  iconText: string; // Novo prop para o texto do ícone
-  iconColor: string; // Novo prop para a cor do ícone
+  status: {
+    text: string,
+    color: string
+  }
+
 }
 
-export default function SensorOutput({ value, iconText, iconColor }: SensorOutputProps) {
+export default function SensorOutput({ value, status }: SensorOutputProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>O sensor captou:</Text>
-      <Text style={styles.value}>{value}Lts</Text>
-      <View style={[styles.check, { backgroundColor: iconColor }]}>
-        <Text style={styles.iconText}>{iconText}</Text>
+      <Text style={[styles.value, {color: status.color}]}>{value}Lts</Text>
+      <View style={[styles.check, { backgroundColor: status.color }]}>
+        <Text style={styles.iconText}>{status.text}</Text>
       </View>
     </View>
   );
@@ -33,7 +36,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 5,
     fontSize: 115,
-    color: 'green',
   },
   check: {
     display: 'flex',

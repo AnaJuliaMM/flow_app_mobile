@@ -113,33 +113,25 @@ export default function Dashboard() {
     }
   };
 
-  //Lógica de verificar dados
+  //Lógica de verificar a diferença
   const verifyLTS = () => {
     // Faz os litros totais menos o que foi enviado pelo usuário
     const difference = litrosTotaisSensor - pumpData.litros_totais
-    const tolerance = pumpData.litros_totais*0.005
+    const tolerance = pumpData.litros_totais*0.005 // 0,5%
 
    if(difference < tolerance){
-    console.log("Diferença menor que a tolerância");
-    
-   }else{
-    console.log("Diferença é maior ou igual a tolerância");
-    
+    console.log(`Diferença MENOR. Diferença ${difference}, tolerança: ${tolerance}`);
+    return {
+      text: 'ALERTA!',
+      color: 'red'
+    }
    }
-
-    console.log('difference: ' + difference);
-    console.log('tolerance:' + tolerance);
-    
-    
-    // tolerância = 5%
-
-
-    // Se estiver menos - legenda (swicth case) 
-    console.log(pumpData.litros_totais);
-    console.log(pumpData.preco_por_litro);
-    
-    
-
+    console.log(`Diferença OK. Diferença ${difference}, tolerança: ${tolerance}`);
+    return {
+      text: 'Abastecimento aceitável',
+      color: 'green'
+    }
+  
   }
 
   useEffect(() => {
@@ -159,7 +151,7 @@ export default function Dashboard() {
 
    return (
     <View style={styles.container}>
-      <SensorOutput value={litrosTotaisSensor} iconText={'Abastecimento aceitável'} iconColor={'green'} />
+      <SensorOutput value={litrosTotaisSensor} status={verifyLTS()} />
 
       <View style={styles.chartContainer}>
         {loading ? (
