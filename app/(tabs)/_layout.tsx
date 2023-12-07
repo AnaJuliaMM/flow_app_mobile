@@ -38,24 +38,6 @@ export default function TabLayout() {
           },
         }}
       />
-      <Tabs.Screen
-        name="output"
-        options={{
-          title: "Resultado",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="dashboard" size={24} color={color} />
-          ),
-          headerTitle: "Sensor Flow",
-          headerTitleAlign: 'center',
-          headerTitleContainerStyle: {
-            flex: 1,
-            justifyContent: 'center',
-          },
-          headerTitleStyle: {
-            fontSize: 20,
-          },
-        }}
-      />
 
       <Tabs.Screen
         name="dashboard"
