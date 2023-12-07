@@ -3,7 +3,7 @@ import { Tabs } from "expo-router";
 import Colors from "../../constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity, Image } from "react-native";
+import { View, Image } from "react-native";
 
 export default function TabLayout() {
   const navigation = useNavigation();
@@ -21,12 +21,12 @@ export default function TabLayout() {
         },
         headerTintColor: 'white', // Cor do texto do cabeçalho
         headerLeft: () => 
-          (<TouchableOpacity>
+          (<View>
               <Image
-                  source={require('./../../assets/images/logo.png')}
-                  style={{ width: 60, height: 50 }}
+                  source={require('./../../assets/images/gas2.png')}
+                  style={{ width: 35, height:35, marginLeft: 30, }}
                 />
-          </TouchableOpacity>)
+          </View>)
         
       }}
     >

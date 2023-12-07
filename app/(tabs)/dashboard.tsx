@@ -117,7 +117,7 @@ export default function Dashboard() {
   //Lógica de verificar a diferença
   const verifyLTS = () => {
     // Faz os litros totais menos o que foi enviado pelo usuário
-    const difference = pumpData.litros_totais - litrosTotaisSensor 
+    const difference =  pumpData.litros_totais - litrosTotaisSensor
     const limitMax =  0.200 // 0,1% - pumpData.litros_totais*0.001
     const limitMin = 0.100 // 0,5% - pumpData.litros_totais*0.005
 
@@ -141,12 +141,6 @@ export default function Dashboard() {
       text: `ALERTA! Diferença: ${difference.toFixed(2)}`,
       color: 'red'
     }
-    
-
-    
-
-
-
   }
 
   useEffect(() => {
@@ -166,7 +160,7 @@ export default function Dashboard() {
 
    return (
     <View style={styles.container}>
-      <SensorOutput value={litrosTotaisSensor} status={verifyLTS()} />
+      <SensorOutput value={litrosTotaisSensor} data="" status={verifyLTS()} />
 
       <View style={styles.chartContainer}>
         {loading ? (
@@ -183,7 +177,7 @@ export default function Dashboard() {
               strokeWidth: 2,
             }}
             bezier
-            xLabelsOffset={-10}
+            xLabelsOffset={0}
           />
         )}
       </View>
@@ -194,7 +188,6 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
-    paddingTop: 10,
     flex: 1,
     justifyContent: 'center',
   },
