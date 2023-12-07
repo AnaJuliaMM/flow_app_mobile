@@ -5,6 +5,7 @@ import SensorOutput from "../../components/SensorOutput";
 import { format } from 'date-fns';
 import { usePumpContext } from "../../contexts/pumpContext";
 import { Logs } from "expo";
+import { isWednesday } from "date-fns/esm";
 
 interface SensorData {
   id: number;
@@ -116,22 +117,36 @@ export default function Dashboard() {
   //Lógica de verificar a diferença
   const verifyLTS = () => {
     // Faz os litros totais menos o que foi enviado pelo usuário
-    const difference = litrosTotaisSensor - pumpData.litros_totais
-    const tolerance = pumpData.litros_totais*0.005 // 0,5%
+    const difference = pumpData.litros_totais - litrosTotaisSensor 
+    const limitMax =  0.200 // 0,1% - pumpData.litros_totais*0.001
+    const limitMin = 0.100 // 0,5% - pumpData.litros_totais*0.005
 
-   if(difference < tolerance){
-    console.log(`Diferença MENOR. Diferença ${difference}, tolerança: ${tolerance}`);
+    if (difference < 0 || difference < limitMin) {
+      console.log(`Ook!. Diferença ${difference}, tolerança: ${limitMin}`);
+      return {
+        text: `Tudo certo! Diferença: ${difference.toFixed(2)}`,
+        color: 'green'
+      }
+
+    }else if(difference < limitMax){
+      console.log(`Dentro da tolerância. Diferença ${difference}, intervalo: ${limitMin}-${limitMax}`);
+      return {
+        text: `ATENÇÃO! Diferença: ${difference.toFixed(2)}`,
+        color: 'orange'
+      }
+     
+    }
+    console.log(`Diferença MAIOR que 0,1%. Diferença ${difference}, tolerança: ${limitMax}`);
     return {
-      text: 'ALERTA!',
+      text: `ALERTA! Diferença: ${difference.toFixed(2)}`,
       color: 'red'
     }
-   }
-    console.log(`Diferença OK. Diferença ${difference}, tolerança: ${tolerance}`);
-    return {
-      text: 'Abastecimento aceitável',
-      color: 'green'
-    }
-  
+    
+
+    
+
+
+
   }
 
   useEffect(() => {
