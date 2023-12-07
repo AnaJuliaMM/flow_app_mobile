@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Alert, Button, Text } from "react-native";
 import InputValues from "../../components/InputValues";
+import { usePumpContext, PumpProvider } from './../../contexts/pumpContext';
 
 interface Body {
   litros_totais: number;
@@ -8,10 +9,7 @@ interface Body {
 }
 
 export default function TabOneScreen() {
-  const [pumpData, setPumpData] = useState({
-    litros_totais: 0.0,
-    preco_por_litro: 0.0,
-  });
+  const { pumpData, setPumpData } = usePumpContext();
   const [resultadoProduto, setResultadoProduto] = useState<number | null>(null);
 
   const handleSubmit = async (data: Body) => {
