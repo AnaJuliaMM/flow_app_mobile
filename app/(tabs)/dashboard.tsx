@@ -1,13 +1,17 @@
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { LineChart } from "react-native-chart-kit";
 import SensorOutput from "../../components/SensorOutput";
-
-
+import { format } from 'date-fns';
+import { usePumpContext } from "../../contexts/pumpContext";
+import { Logs } from "expo";
+import { isWednesday } from "date-fns/esm";
 
 interface SensorData {
+  id: number;
   tempo_operacao: string;
   litros_totais: number;
+  litros_por_minuto: number;
 }
 
 interface ChartData {
@@ -22,15 +26,10 @@ interface ChartData {
 
 const API_ENDPOINT = 'http://xquad3.pythonanywhere.com/sensor';
 
-
-
 export default function Dashboard() {
-  // Variables of output
-  const [litrosTotais, setLitrosTotais] = useState(0);
+  const [litrosTotaisSensor, setLitrosTotaisSensor] = useState(0);
   const [abastecimentoEmAndamento, setAbastecimentoEmAndamento] = useState(false);
-  const [ultimaAtualizacao, setUltimaAtualizacao] = useState<Date | null>(null);
-
-  // Variables of dashboard
+  const [ultimaAtualizacao, setUltimaAtualizacao] = useState<Date | undefined>(undefined);
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [
@@ -40,160 +39,163 @@ export default function Dashboard() {
         strokeWidth: 2,
       },
     ],
-    legend: ["Vazão por Segundo"],
+    legend: ["Vazão por Minuto"],
   });
   const [loading, setLoading] = useState<boolean>(true);
-  const [maxDataPoints, setMaxDataPoints] = useState<number>(7);
+  const [maxDataPoints, setMaxDataPoints] = useState<number>(5);
   const [timeInterval, setTimeInterval] = useState<number>(1);
+  const [lastRecordTimestamp, setLastRecordTimestamp] = useState<string | null>(null);
+  const [lastProcessedRecord, setLastProcessedRecord] = useState<SensorData | null>(null);
+  const {pumpData} = usePumpContext()
 
+  // Função de requisição de dados para o dashboard
+  const fetchData = async () => {
+    try {
+      const queryParams = lastRecordTimestamp ? `?lastRecordTimestamp=${lastRecordTimestamp}` : '';
+      const response = await fetch(`${API_ENDPOINT}${queryParams}`);
+      const result: SensorData[] = await response.json();
 
-  
-  
+      if (result.length > 0) {
+        const latestRecord = result[result.length - 1];
+        if (!lastProcessedRecord || latestRecord.tempo_operacao !== lastProcessedRecord.tempo_operacao) {
+          setLastRecordTimestamp(latestRecord.tempo_operacao);
+          setLastProcessedRecord(latestRecord);
 
-  useEffect(() => {
-    const verificaFimAbastecimento = () => {
-      if (abastecimentoEmAndamento && ultimaAtualizacao) {
-        const diferencaTempo = new Date().getTime() - ultimaAtualizacao.getTime();
+          const formattedData = result.map((data) => ({
+            seconds: new Date(data.tempo_operacao).getTime(),
+            vazao: data.litros_por_minuto,
+          }));
 
-        if (diferencaTempo > 5000 && litrosTotais > 0) {
-          setAbastecimentoEmAndamento(false);
-          console.log('Abastecimento concluído! Último valor:', litrosTotais);
+          const reducedData = formattedData.slice(-maxDataPoints);
+          const labels = reducedData.map((entry) => format(entry.seconds, 'HH:mm:ss'));
+          const vazaoPorMinuto = reducedData.map((entry) => entry.vazao);
+
+          setChartData({
+            labels,
+            datasets: [
+              {
+                data: vazaoPorMinuto,
+                color: (opacity) => `rgba(134, 65, 244, ${opacity})`,
+                strokeWidth: 2,
+              },
+            ],
+            legend: ["Vazão por Minuto"],
+          });
+
+          setLoading(false);
         }
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+  };
 
-    const intervalFimAbastecimento = setInterval(verificaFimAbastecimento, 1000);
+  // Função de requisição de dados para a saída
+  const fetchDataOutput = async () => {
+    try {
+      const response = await fetch(API_ENDPOINT);
+      const data = await response.json();
 
-    return () => clearInterval(intervalFimAbastecimento);
-  }, [abastecimentoEmAndamento, ultimaAtualizacao, litrosTotais]);
+      if (Array.isArray(data) && data.length > 0) {
+        const ultimoDado = data[data.length - 1].litros_totais;
+
+        if (ultimoDado !== litrosTotaisSensor) {
+          setLitrosTotaisSensor(ultimoDado);
+          setAbastecimentoEmAndamento(true);
+          setUltimaAtualizacao(new Date());
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados da API:', error);
+      setLitrosTotaisSensor(0);
+      setAbastecimentoEmAndamento(false);
+      setUltimaAtualizacao(undefined);
+    }
+  };
+
+  //Lógica de verificar a diferença
+  const verifyLTS = () => {
+    // Faz os litros totais menos o que foi enviado pelo usuário
+    const difference =  pumpData.litros_totais - litrosTotaisSensor
+    const limitMax =  0.200 // 0,1% - pumpData.litros_totais*0.001
+    const limitMin = 0.100 // 0,5% - pumpData.litros_totais*0.005
+
+    if (difference < 0 || difference < limitMin) {
+      console.log(`Ook!. Diferença ${difference}, tolerança: ${limitMin}`);
+      return {
+        text: `Tudo certo! Diferença: ${difference.toFixed(2)}`,
+        color: 'green'
+      }
+
+    }else if(difference < limitMax){
+      console.log(`Dentro da tolerância. Diferença ${difference}, intervalo: ${limitMin}-${limitMax}`);
+      return {
+        text: `ATENÇÃO! Diferença: ${difference.toFixed(2)}`,
+        color: 'orange'
+      }
+     
+    }
+    console.log(`Diferença MAIOR que 0,1%. Diferença ${difference}, tolerança: ${limitMax}`);
+    return {
+      text: `ALERTA! Diferença: ${difference.toFixed(2)}`,
+      color: 'red'
+    }
+  }
 
   useEffect(() => {
+    // Busca dos dados
     fetchData();
-    const intervalDashboard = setInterval(() => {
-      fetchData();
-    }, timeInterval * 1000);
+    const intervalDashboard = setInterval(fetchData, timeInterval * 1000);
 
     fetchDataOutput();
+    verifyLTS()
     const intervalOutput = setInterval(fetchDataOutput, 500);
 
     return () => {
       clearInterval(intervalDashboard);
       clearInterval(intervalOutput);
-    }
-  }, []);
-
-    // Get data to dashboard
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://xquad3.pythonanywhere.com/sensor/");
-        const result: SensorData[] = await response.json();
-  
-        const formattedData = result.map((data, index) => ({
-          seconds: index * timeInterval + 1,
-          vazao: data.litros_totais,
-        }));
-  
-        const reducedData = formattedData.slice(-maxDataPoints);
-        const labels = reducedData.map((entry) => entry.seconds.toString());
-        const vazaoPorSegundo = reducedData.map((entry) => entry.vazao);
-  
-        setChartData({
-          labels,
-          datasets: [
-            {
-              data: vazaoPorSegundo,
-              color: (opacity) => `rgba(134, 65, 244, ${opacity})`,
-              strokeWidth: 2,
-            },
-          ],
-          legend: ["Vazão por Segundo"],
-        });
-  
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
     };
-  
-    // Code to output
-    const fetchDataOutput = async () => {
-      try {
-        const response = await fetch(API_ENDPOINT);
-        const data = await response.json();
-  
-        if (Array.isArray(data) && data.length > 0) {
-          const ultimoDado = data[data.length - 1].litros_totais;
-  
-          if (ultimoDado !== litrosTotais) {
-            setLitrosTotais(ultimoDado);
-            setAbastecimentoEmAndamento(true);
-            setUltimaAtualizacao(new Date());
-          }
-        }
-      } catch (error) {
-        console.error('Erro ao buscar dados da API:', error);
-        setLitrosTotais(0);
-        setAbastecimentoEmAndamento(false);
-        setUltimaAtualizacao(null);
-      }
-    };
+  }, [timeInterval, litrosTotaisSensor, lastRecordTimestamp, lastProcessedRecord]);
 
-
-  if (loading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
-
-  //Lógica do abastecimento
-  let textoExibicao = 'Aguardando abastecimento';
-
-  if (abastecimentoEmAndamento) {
-    textoExibicao = 'Abastecimento em andamento';
-  } else if (ultimaAtualizacao) {
-    textoExibicao = 'Abastecimento concluído!';
-  }
-
-
-
-
-
-
-  return (
+   return (
     <View style={styles.container}>
-         <View style={styles.container}>
-          <SensorOutput value={litrosTotais} iconText={'Abastecimento aceitável'} iconColor={ 'green'} />
-          <Text>{textoExibicao}</Text>
-        </View>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <LineChart
-          data={chartData}
-          width={370}
-          height={220}
-          chartConfig={{
-            backgroundGradientFrom: "#ffffff",
-            backgroundGradientTo: "#ffffff",
-            color: (opacity) => `rgba(0, 0, 0, ${opacity})`,
-            strokeWidth: 2,
-          }}
-          bezier
-          xLabelsOffset={-10}
-        />
-      )}
+      <SensorOutput value={litrosTotaisSensor} data="" status={verifyLTS()} />
+
+      <View style={styles.chartContainer}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <LineChart
+            data={chartData}
+            width={370}
+            height={220}
+            chartConfig={{
+              backgroundGradientFrom: "#ffffff",
+              backgroundGradientTo: "#ffffff",
+              color: (opacity) => `rgba(0, 0, 0, ${opacity})`,
+              strokeWidth: 2,
+            }}
+            bezier
+            xLabelsOffset={0}
+          />
+        )}
+      </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
-    paddingTop: 40,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  chartContainer: {
+    marginTop: 40,
+  },
+  text: {
+    marginTop: 40,
+    textAlign: 'center',
   },
 });
-

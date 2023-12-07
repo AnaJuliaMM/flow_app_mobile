@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
+import { PumpProvider } from '../contexts/pumpContext';
+
 
 
 
@@ -46,9 +48,12 @@ export default function RootLayout() {
 function RootLayoutNav() {
 
   return (
+    <PumpProvider>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
-  );
+    </PumpProvider>
+  )
+      
 }

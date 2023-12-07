@@ -2,40 +2,48 @@ import { StyleSheet, Text, View, TextInput, ImageStyle, TouchableWithoutFeedback
 import React from 'react'
 import CustomImage from './Image'
 
-interface InputValuesProp{
-  
-    text: string,
-    imagePath: string,
-    style?: ImageStyle,
-    onChange: (value:number) => void
+interface InputValuesProp {
+  text: string,
+  imagePath: string,
+  style?: ImageStyle,
+  onChange: (value: number) => void
 }
 
-  const handleDismissKeyboard = () => {
-    Keyboard.dismiss();
+const handleDismissKeyboard = () => {
+  Keyboard.dismiss();
+};
+
+export default function InputValues({ text, imagePath, style, onChange }: InputValuesProp) {
+  const [inputValue, setInputValue] = React.useState<string>('');
+
+  const handleInputChange = (text: string) => {
+    // Você pode adicionar validação aqui para garantir que seja um número válido
+    const numericValue = parseFloat(text);
+    
+    setInputValue(text);
+    onChange(numericValue);
   };
-
-
-export default function InputValues({text, imagePath, style}: InputValuesProp) {
-  
 
   return (
     <View style={styles.wrapper}>
       <Text style={styles.text}>{text}</Text>
       <View style={styles.container}>
-        <CustomImage imagePath={imagePath} style={style}/>
+        <CustomImage imagePath={imagePath} style={style} />
 
-          <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
-            <View style={styles.container}>
-              <TextInput
-                keyboardType='numeric'
-                style={styles.input}
-                returnKeyType='done'
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
+        <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              keyboardType='numeric'
+              style={styles.input}
+              returnKeyType='done'
+              value={inputValue}
+              onChangeText={handleInputChange}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -45,22 +53,32 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   container: {
-      textAlign:"center",
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignSelf: 'center',
+    textAlign: "center",
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   text: {
-      color: '#000',
-      fontSize: 22,
-      textAlign: 'center',
-      display: 'flex',
-      flexDirection:'row',
-      paddingLeft:5,
-      paddingRight: 5,
-      margin:0,
-      paddingBottom:0,
-      paddingTop:0
+    color: '#000',
+    fontSize: 22,
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    paddingLeft: 5,
+    paddingRight: 5,
+    margin: 0,
+    paddingBottom: 0,
+    paddingTop: 0
+  },
+  inputContainer: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4, 
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    marginVertical: 10,
   },
   input: {
     textAlign: 'center',
@@ -70,11 +88,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     fontSize: 30,
     fontWeight: '700',
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
-  image: {
-    width: 17,
-    height: 30
-  },
-
-})
+});
