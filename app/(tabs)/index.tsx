@@ -7,12 +7,11 @@ interface Body {
   preco_por_litro: number;
 }
 
-export default function TabOneScreen({ navigation }: any) {
+export default function TabOneScreen() {
   const [pumpData, setPumpData] = useState({
     litros_totais: 0.0,
     preco_por_litro: 0.0,
   });
-
   const [resultadoProduto, setResultadoProduto] = useState<number | null>(null);
 
   const handleSubmit = async (data: Body) => {
@@ -41,7 +40,7 @@ export default function TabOneScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <InputValues
-        text="Valor Pago:"
+        text="Valor pago por litro:"
         imagePath="../../assets/images/vector_money.png"
         style={{ width: 21, height: 38 }}
         onChange={(value: number) =>
