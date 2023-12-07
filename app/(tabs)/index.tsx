@@ -18,19 +18,21 @@ export default function TabOneScreen() {
       const precoPorLitro = parseFloat(data.preco_por_litro.toString());
       const litrosTotais = parseFloat(data.litros_totais.toString());
 
-      // Debug logs
-      console.log("precoPorLitro:", precoPorLitro);
-      console.log("litrosTotais:", litrosTotais);
+      if( precoPorLitro && litrosTotais){
+        // Calcular o produto e atualizar o estado
+        const produto = precoPorLitro * litrosTotais;
+        console.log("produto:", produto);
+        setResultadoProduto(produto);
 
-      // Calcular o produto e atualizar o estado
-      const produto = precoPorLitro * litrosTotais;
-      console.log("produto:", produto);
+      }else{
+        Alert.alert("Atenção", "Algum campo está vazio!");
 
-      setResultadoProduto(produto);
+      }
 
-      Alert.alert("Success", "Data sent successfully");
+      
+
     } catch (error) {
-      Alert.alert("Error", "Failed to send data");
+      Alert.alert("Erro", "Falha na computação dos valores");
       console.error("Error:", error);
     }
   };
